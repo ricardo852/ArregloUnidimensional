@@ -1,0 +1,137 @@
+import javax.swing.*;
+import java.util.Arrays;
+
+public class ArregloUnidimensional extends JFrame {
+    private int[] arreglo = new int[10];
+    private JTextField txtNumero, txtPosicion;
+    private JTextArea txtResultado;
+
+    public ArregloUnidimensional() {
+        setTitle("Arreglo Unidimensional");
+        setSize(400, 400);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(null);
+
+        JLabel lblNumero = new JLabel("Número:");
+        lblNumero.setBounds(20, 20, 100, 25);
+        add(lblNumero);
+
+        txtNumero = new JTextField();
+        txtNumero.setBounds(120, 20, 100, 25);
+        add(txtNumero);
+
+        JLabel lblPosicion = new JLabel("Posición:");
+        lblPosicion.setBounds(20, 60, 100, 25);
+        add(lblPosicion);
+
+        txtPosicion = new JTextField();
+        txtPosicion.setBounds(120, 60, 100, 25);
+        add(txtPosicion);
+
+        JButton btnAgregar = new JButton("Agregar Dato");
+        btnAgregar.setBounds(20, 100, 150, 25);
+        btnAgregar.addActionListener(e -> agregarDato());
+        add(btnAgregar);
+
+        JButton btnBorrar = new JButton("Borrar Dato");
+        btnBorrar.setBounds(200, 100, 150, 25);
+        btnBorrar.addActionListener(e -> borrarDato());
+        add(btnBorrar);
+
+        JButton btnLimpiar = new JButton("Limpiar Arreglo");
+        btnLimpiar.setBounds(20, 140, 150, 25);
+        btnLimpiar.addActionListener(e -> limpiarArreglo());
+        add(btnLimpiar);
+
+        JButton btnConsultar = new JButton("Consultar Arreglo");
+        btnConsultar.setBounds(200, 140, 150, 25);
+        btnConsultar.addActionListener(e -> consultarArreglo());
+        add(btnConsultar);
+
+        JButton btnPromedio = new JButton("Calcular Promedio");
+        btnPromedio.setBounds(20, 180, 330, 25);
+        btnPromedio.addActionListener(e -> calcularPromedio());
+        add(btnPromedio);
+
+        txtResultado = new JTextArea();
+        txtResultado.setBounds(20, 220, 350, 120);
+        txtResultado.setEditable(false);
+        add(txtResultado);
+    }
+
+    private boolean esNumero(String texto) {
+        if (texto == null || texto.isEmpty()) return false;
+        for (char c : texto.toCharArray()) {
+            if (!Character.isDigit(c) && c != '-') return false;
+        }
+        return true;
+    }
+
+    private void agregarDato() {
+        String textoNumero = txtNumero.getText();
+        String textoPosicion = txtPosicion.getText();
+
+        if (!esNumero(textoNumero) || !esNumero(textoPosicion)) {
+            txtResultado.setText("Ingresa valores numéricos válidos.");
+            return;
+        }
+
+        int numero = Integer.parseInt(textoNumero);
+        int posicion = Integer.parseInt(textoPosicion);
+
+        if (posicion >= 0 && posicion < arreglo.length) {
+            arreglo[posicion] = numero;
+            txtResultado.setText("Dato agregado con éxito.");
+        } else {
+            txtResultado.setText("Posición fuera de rango (0-9).");
+        }
+    }
+
+    private void borrarDato() {
+        String textoPosicion = txtPosicion.getText();
+
+        if (!esNumero(textoPosicion)) {
+            txtResultado.setText("Posición inválida.");
+            return;
+        }
+
+        int posicion = Integer.parseInt(textoPosicion);
+
+        if (posicion >= 0 && posicion < arreglo.length) {
+            arreglo[posicion] = 0;
+            txtResultado.setText("Dato borrado con éxito.");
+        } else {
+            txtResultado.setText("Posición fuera de rango (0-9).");
+        }
+    }
+
+    private void limpiarArreglo() {
+        Arrays.fill(arreglo, 0);
+        txtResultado.setText("Arreglo limpiado.");
+    }
+
+    private void consultarArreglo() {
+        txtResultado.setText("Contenido del arreglo:\n" + Arrays.toString(arreglo));
+    }
+
+    private void calcularPromedio() {
+        int suma = 0;
+        int cont = 0;
+        for (int num : arreglo) {
+            if (num != 0) {
+                suma += num;
+                cont++;
+            }
+        }
+        if (cont > 0) {
+            double promedio = (double) suma / cont;
+            txtResultado.setText("Promedio: " + promedio);
+        } else {
+            txtResultado.setText("No hay datos para calcular el promedio.");
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new ArregloUnidimensional().setVisible(true));
+    }
+}
